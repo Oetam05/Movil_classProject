@@ -1,4 +1,3 @@
-import 'package:f_web_authentication/ui/pages/content/edit_user_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
@@ -19,12 +18,35 @@ class _UserListPageState extends State<UserListPage> {
   UserController userController = Get.find();
   AuthenticationController authenticationController = Get.find();
 
+  TextEditingController userInputController = TextEditingController();
+  String selectedNumbers = '';
+
   _logout() async {
     try {
       await authenticationController.logOut();
     } catch (e) {
       logInfo(e);
     }
+  }
+
+  void _addToSelectedNumbers(String number) {
+    setState(() {
+      selectedNumbers += number;
+      userInputController.text = selectedNumbers;
+    });
+  }
+
+  @override
+  void dispose() {
+    userInputController.dispose();
+    super.dispose();
+  }
+
+  void _clearSelectedNumbers() {
+    setState(() {
+      selectedNumbers = '';
+      userInputController.clear(); // Borra el contenido del campo de texto.
+    });
   }
 
   @override
@@ -42,50 +64,60 @@ class _UserListPageState extends State<UserListPage> {
               userController.simulateProcess();
             }),
       ]),
-      body: Center(child: _getXlistView()),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          logInfo("Add user from UI");
-          Get.to(() => const NewUserPage());
-        },
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-
-  Widget _getXlistView() {
-    return Obx(
-      () => ListView.builder(
-        itemCount: userController.users.length,
-        itemBuilder: (context, index) {
-          User user = userController.users[index];
-          return Dismissible(
-            key: UniqueKey(),
-            background: Container(
-                color: Colors.red,
-                alignment: Alignment.centerLeft,
-                child: const Padding(
-                  padding: EdgeInsets.only(left: 20),
-                  child: Text(
-                    "Deleting",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )),
-            onDismissed: (direction) {
-              userController.deleteUser(user.id!);
-            },
-            child: Card(
-              child: ListTile(
-                title: Text(user.name),
-                subtitle: Text(user.email),
-                onTap: () {
-                  Get.to(() => const EditUserPage(),
-                      arguments: [user, user.id]);
-                },
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              controller: userInputController,
+              readOnly: true, // Para evitar que el usuario edite el campo
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Respuesta',
               ),
             ),
-          );
-        },
+          ),
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3, // 3 columnas en la cuadrícula
+              ),
+              itemCount: 12,
+              itemBuilder: (BuildContext context, int index) {
+                final numero = index + 1;
+                return GestureDetector(
+                  onTap: () {
+                    if (numero == 10) {
+                      _clearSelectedNumbers();
+                    } else if (numero == 11) {
+                      _addToSelectedNumbers('0');
+                    } else if (numero == 12) {
+                      // Lógica para el botón 'GO'
+                    } else {
+                      _addToSelectedNumbers('$numero');
+                    }
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      numero == 10
+                          ? 'C'
+                          : numero == 11
+                              ? '0'
+                              : numero == 12
+                                  ? 'GO'
+                                  : '$numero',
+                      style: const TextStyle(fontSize: 24.0),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
