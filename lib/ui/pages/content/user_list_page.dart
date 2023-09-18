@@ -18,6 +18,14 @@ class _UserListPageState extends State<UserListPage> {
   final CalculatorController calculatorController =
       Get.put(CalculatorController());
 
+  @override
+  void initState() {
+    super.initState();
+    calculatorController
+        .generateRandomNumbers(); // Genera nuevos números aleatorios cada vez que entras a la pantalla
+    calculatorController.clearInput();
+  }
+
   _logout() async {
     try {
       await authenticationController.logOut();
@@ -25,6 +33,15 @@ class _UserListPageState extends State<UserListPage> {
       logInfo(e);
     }
   }
+
+  final buttonStyle = ElevatedButton.styleFrom(
+    foregroundColor: Colors.white, backgroundColor: Colors.blue,
+    shape: RoundedRectangleBorder(
+      borderRadius:
+          BorderRadius.circular(60.0), // Radio de borde (20.0 para redondear)
+    ),
+    textStyle: const TextStyle(fontSize: 24.0), // Tamaño del texto
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +62,13 @@ class _UserListPageState extends State<UserListPage> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
+            child: Obx(() =>Text(
+              '¿Cuánto es ${calculatorController.random1.value} + ${calculatorController.random2.value}?',
+              style: const TextStyle(fontSize: 24.0),
+            )),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Obx(() => Text(
                   calculatorController.userInput.value,
                   style: const TextStyle(fontSize: 24.0),
@@ -59,22 +83,39 @@ class _UserListPageState extends State<UserListPage> {
               itemBuilder: (BuildContext context, int index) {
                 final numero = index + 1;
                 return GestureDetector(
-                  onTap: () {
-                    if (numero == 10) {
-                      calculatorController.clearInput();
-                    } else if (numero == 11) {
-                      calculatorController.addToInput('0');
-                    } else if (numero == 12) {
-                      // Lógica para el botón 'GO'
-                    } else {
-                      calculatorController.addToInput('$numero');
-                    }
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                    ),
-                    alignment: Alignment.center,
+                  onTap: () {},
+                  child: ElevatedButton(
+                    style: buttonStyle, // Aplica el estilo personalizado
+                    onPressed: () {
+                      // Agrega la lógica de escritura en el campo de texto
+                      if (numero == 10) {
+                        calculatorController.clearInput();
+                      } else if (numero == 11) {
+                        calculatorController.addToInput('0');
+                      } else if (numero == 12) {
+                        // Lógica para el botón 'GO'
+                        final respuesta =
+                            int.tryParse(calculatorController.userInput.value);
+                        final suma = calculatorController.calculateSum();
+                        final esCorrecta =
+                            respuesta != null && respuesta == suma;
+
+                        final snackbar = SnackBar(
+                          content: Text(esCorrecta
+                              ? '¡Respuesta correcta!'
+                              : 'Respuesta incorrecta. Inténtalo de nuevo.'),
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                        if(esCorrecta){
+                          calculatorController.generateRandomNumbers();
+                        }
+                        // Limpia la entrada
+                        calculatorController.clearInput();
+                      } else {
+                        calculatorController.addToInput('$numero');
+                      }
+                    },
                     child: Text(
                       numero == 10
                           ? 'C'
@@ -83,7 +124,6 @@ class _UserListPageState extends State<UserListPage> {
                               : numero == 12
                                   ? 'GO'
                                   : '$numero',
-                      style: const TextStyle(fontSize: 24.0),
                     ),
                   ),
                 );
