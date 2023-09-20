@@ -62,10 +62,10 @@ class _UserListPageState extends State<UserListPage> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Obx(() =>Text(
-              '¿Cuánto es ${calculatorController.random1.value} + ${calculatorController.random2.value}?',
-              style: const TextStyle(fontSize: 24.0),
-            )),
+            child: Obx(() => Text(
+                  '${calculatorController.question.value} ',
+                  style: const TextStyle(fontSize: 24.0),
+                )),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -94,22 +94,7 @@ class _UserListPageState extends State<UserListPage> {
                         calculatorController.addToInput('0');
                       } else if (numero == 12) {
                         // Lógica para el botón 'GO'
-                        final respuesta =
-                            int.tryParse(calculatorController.userInput.value);
-                        final suma = calculatorController.calculateSum();
-                        final esCorrecta =
-                            respuesta != null && respuesta == suma;
-
-                        final snackbar = SnackBar(
-                          content: Text(esCorrecta
-                              ? '¡Respuesta correcta!'
-                              : 'Respuesta incorrecta. Inténtalo de nuevo.'),
-                        );
-
-                        ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                        if(esCorrecta){
-                          calculatorController.generateRandomNumbers();
-                        }
+                        calculatorController.calculate();
                         // Limpia la entrada
                         calculatorController.clearInput();
                       } else {

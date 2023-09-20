@@ -3,17 +3,32 @@ import 'dart:math';
 
 class CalculatorController extends GetxController {
   var userInput = ''.obs;
-  var random1 = 0.obs;
-  var random2 = 0.obs;
+  int random1 = 0;
+  int random2 = 0;
+  String op = "+";
+  var question = ''.obs;
 
+  int i = 0;
+  int ga = 0;
   void generateRandomNumbers() {
     final random = Random();
-    random1.value = random.nextInt(10); 
-    random2.value = random.nextInt(10);
+
+    random1 = random.nextInt(10);
+    random2 = random.nextInt(10);
+    question.value = '¿Cuánto es $random1 + $random2?';
   }
 
-  int calculateSum() {
-    return random1.value + random2.value;
+  void calculate() {
+    if (random1 + random2 == int.tryParse(userInput.value)) {
+      ga++;
+      print(ga);
+    }
+    i++;
+    if (i < 6) {
+      generateRandomNumbers();
+    } else {
+      print("se acab'o");
+    }
   }
 
   void addToInput(String value) {
