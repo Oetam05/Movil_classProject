@@ -5,14 +5,14 @@ import '../../controller/authentication_controller.dart';
 import '../../controller/user_controller.dart';
 import '../../controller/calculator_controller.dart';
 
-class UserListPage extends StatefulWidget {
-  const UserListPage({super.key});
+class PlayingPage extends StatefulWidget {
+  const PlayingPage({super.key});
 
   @override
-  State<UserListPage> createState() => _UserListPageState();
+  State<PlayingPage> createState() => _PlayingPageState();
 }
 
-class _UserListPageState extends State<UserListPage> {
+class _PlayingPageState extends State<PlayingPage> {
   UserController userController = Get.find();
   AuthenticationController authenticationController = Get.find();
   final CalculatorController calculatorController =

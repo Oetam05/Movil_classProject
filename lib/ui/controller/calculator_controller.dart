@@ -27,7 +27,7 @@ class CalculatorController extends GetxController {
     if (i < 6) {
       generateRandomNumbers();
     } else {
-      print("se acab'o");
+      print("se acabo");
     }
   }
 
