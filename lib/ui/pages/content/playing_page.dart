@@ -1,3 +1,4 @@
+import 'package:f_web_authentication/ui/pages/content/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
@@ -16,12 +17,13 @@ class _PlayingPageState extends State<PlayingPage> {
   AuthenticationController authenticationController = Get.find();
   final CalculatorController calculatorController = Get.find();
   String question = "";
-  bool finish = false;
+  int finish = 0;
   @override
   void initState() {
     super.initState();
     final operation = Get.arguments as String;
     calculatorController.setOp(operation);
+
     question = calculatorController
         .generateRandomNumbers(); // Genera nuevos números aleatorios cuando entras a la pantalla
     calculatorController.clearInput();
@@ -46,6 +48,7 @@ class _PlayingPageState extends State<PlayingPage> {
 
   @override
   Widget build(BuildContext context) {
+    DateTime momentoGeneracion = DateTime.now();
     return Scaffold(
       appBar: AppBar(title: const Text("Welcome"), actions: [
         IconButton(
@@ -64,7 +67,7 @@ class _PlayingPageState extends State<PlayingPage> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              '¿Cuanto es $question ?',
+              question,
               style: const TextStyle(fontSize: 24.0),
             ),
           ),
@@ -95,12 +98,22 @@ class _PlayingPageState extends State<PlayingPage> {
                         calculatorController.addToInput('0');
                       } else if (numero == 12) {
                         // Lógica para el botón 'GO'
-                        calculatorController.calculate(question);
-                        if (!finish) {
+
+                        if (finish < 6) {
+                          DateTime momentoRespuesta = DateTime.now();
+                          Duration tiempoTranscurrido =
+                              momentoRespuesta.difference(momentoGeneracion);
+                          calculatorController.calculate(
+                              question, tiempoTranscurrido.inSeconds);
+                          finish = calculatorController.finish();
                           setState(() {
                             question =
                                 calculatorController.generateRandomNumbers();
                           });
+                        } else {
+                          // Si ya se han generado 6 preguntas, se termina el juego
+                          Get.to(const WelcomePage());
+                          calculatorController.reset();
                         }
                         // Limpia la entrada
                         calculatorController.clearInput();
