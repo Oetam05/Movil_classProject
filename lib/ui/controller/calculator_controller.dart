@@ -1,34 +1,19 @@
+import 'package:f_web_authentication/domain/use_case/calculator_usecase.dart';
 import 'package:get/get.dart';
-import 'dart:math';
 
 class CalculatorController extends GetxController {
   var userInput = ''.obs;
-  int random1 = 0;
-  int random2 = 0;
-  String op = "+";
-  var question = ''.obs;
+  String op = "";
 
-  int i = 0;
-  int ga = 0;
-  void generateRandomNumbers() {
-    final random = Random();
-
-    random1 = random.nextInt(10);
-    random2 = random.nextInt(10);
-    question.value = '¿Cuánto es $random1 + $random2?';
+  final CalculatorUseCase calculatorUseCase = Get.find();
+  String generateRandomNumbers() {
+    return calculatorUseCase.generateRandomNumbers(1, op);
   }
-
-  void calculate() {
-    if (random1 + random2 == int.tryParse(userInput.value)) {
-      ga++;
-      print(ga);
-    }
-    i++;
-    if (i < 6) {
-      generateRandomNumbers();
-    } else {
-      print("se acabo");
-    }
+  void setOp(String op){
+    this.op = op;
+  }
+  void calculate(String question) {
+    calculatorUseCase.calculate(question, userInput.value);
   }
 
   void addToInput(String value) {

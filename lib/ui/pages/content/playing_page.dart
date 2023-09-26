@@ -7,7 +7,6 @@ import '../../controller/calculator_controller.dart';
 
 class PlayingPage extends StatefulWidget {
   const PlayingPage({super.key});
-
   @override
   State<PlayingPage> createState() => _PlayingPageState();
 }
@@ -15,14 +14,16 @@ class PlayingPage extends StatefulWidget {
 class _PlayingPageState extends State<PlayingPage> {
   UserController userController = Get.find();
   AuthenticationController authenticationController = Get.find();
-  final CalculatorController calculatorController =
-      Get.put(CalculatorController());
-
+  final CalculatorController calculatorController = Get.find();
+  String question = "";
+  bool finish = false;
   @override
   void initState() {
     super.initState();
-    calculatorController
-        .generateRandomNumbers(); // Genera nuevos números aleatorios cada vez que entras a la pantalla
+    final operation = Get.arguments as String;
+    calculatorController.setOp(operation);
+    question = calculatorController
+        .generateRandomNumbers(); // Genera nuevos números aleatorios cuando entras a la pantalla
     calculatorController.clearInput();
   }
 
@@ -62,10 +63,10 @@ class _PlayingPageState extends State<PlayingPage> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Obx(() => Text(
-                  '${calculatorController.question.value} ',
-                  style: const TextStyle(fontSize: 24.0),
-                )),
+            child: Text(
+              '¿Cuanto es $question ?',
+              style: const TextStyle(fontSize: 24.0),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -94,7 +95,13 @@ class _PlayingPageState extends State<PlayingPage> {
                         calculatorController.addToInput('0');
                       } else if (numero == 12) {
                         // Lógica para el botón 'GO'
-                        calculatorController.calculate();
+                        calculatorController.calculate(question);
+                        if (!finish) {
+                          setState(() {
+                            question =
+                                calculatorController.generateRandomNumbers();
+                          });
+                        }
                         // Limpia la entrada
                         calculatorController.clearInput();
                       } else {
