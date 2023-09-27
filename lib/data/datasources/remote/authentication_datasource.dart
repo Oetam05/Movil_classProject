@@ -26,7 +26,7 @@ class AuthenticationDatatasource {
     }
   }
 
-  Future<bool> signUp(String baseUrl, String email, String password) async {
+  Future<bool> signUp(String baseUrl, String email, String password, String school, String birthdate, String grade) async {
     final response = await http.post(
       Uri.parse("$baseUrl/register"),
       headers: <String, String>{
@@ -34,8 +34,9 @@ class AuthenticationDatatasource {
       },
       body: jsonEncode(<String, String>{
         "username": email,
-        "first_name": email,
-        "last_name": email,
+        "school": school,
+        "birthdate": birthdate,
+        "grade": grade,
         "password": password,
       }),
     );

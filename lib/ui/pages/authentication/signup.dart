@@ -14,11 +14,14 @@ class _FirebaseSignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   final controllerEmail = TextEditingController(text: 'a@a.com');
   final controllerPassword = TextEditingController(text: '123456');
+  final controllerSchool = TextEditingController(text: 'abc');
+  final controllerBirthdate = TextEditingController(text: '12/05');
+  final controllerGrade = TextEditingController(text: '5');
   AuthenticationController authenticationController = Get.find();
 
-  _signup(theEmail, thePassword) async {
+  _signup(theEmail, thePassword, theSchool, theBirthdate, theGrade) async {
     try {
-      await authenticationController.signUp(theEmail, thePassword);
+      await authenticationController.signUp(theEmail, thePassword, theSchool, theBirthdate, theGrade);
 
       Get.snackbar(
         "Sign Up",
@@ -76,6 +79,54 @@ class _FirebaseSignUpState extends State<SignUp> {
                           height: 20,
                         ),
                         TextFormField(
+                          keyboardType: TextInputType.text,
+                          controller: controllerSchool,
+                          decoration:
+                              const InputDecoration(labelText: "School"),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              logError('SignUp validation empty school');
+                              return "Enter school";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          keyboardType: TextInputType.datetime,
+                          controller: controllerBirthdate,
+                          decoration:
+                              const InputDecoration(labelText: "birthdate"),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              logError('SignUp validation empty birthdate');
+                              return "Enter email";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          keyboardType: TextInputType.number,
+                          controller: controllerGrade,
+                          decoration:
+                              const InputDecoration(labelText: "Grade"),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              logError('SignUp validation empty grade');
+                              return "Enter grade";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
                           controller: controllerPassword,
                           decoration:
                               const InputDecoration(labelText: "Password"),
@@ -102,7 +153,7 @@ class _FirebaseSignUpState extends State<SignUp> {
                               if (_formKey.currentState!.validate()) {
                                 logInfo('SignUp validation form ok');
                                 await _signup(controllerEmail.text,
-                                    controllerPassword.text);
+                                    controllerPassword.text, controllerSchool.text, controllerBirthdate.text, controllerGrade.text);
                               } else {
                                 logError('SignUp validation form nok');
                               }

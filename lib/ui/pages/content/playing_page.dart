@@ -1,7 +1,6 @@
 import 'package:f_web_authentication/ui/pages/content/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:loggy/loggy.dart';
 import '../../controller/authentication_controller.dart';
 import '../../controller/user_controller.dart';
 import '../../controller/calculator_controller.dart';
@@ -29,13 +28,7 @@ class _PlayingPageState extends State<PlayingPage> {
     calculatorController.clearInput();
   }
 
-  _logout() async {
-    try {
-      await authenticationController.logOut();
-    } catch (e) {
-      logInfo(e);
-    }
-  }
+
 
   final buttonStyle = ElevatedButton.styleFrom(
     foregroundColor: Colors.white, backgroundColor: Colors.blue,
@@ -50,12 +43,7 @@ class _PlayingPageState extends State<PlayingPage> {
   Widget build(BuildContext context) {
     DateTime momentoGeneracion = DateTime.now();
     return Scaffold(
-      appBar: AppBar(title: const Text("Welcome"), actions: [
-        IconButton(
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () {
-              _logout();
-            }),
+      appBar: AppBar(title: const Text("Welcome"), actions: [        
         IconButton(
             icon: const Icon(Icons.access_time),
             onPressed: () {
@@ -112,7 +100,7 @@ class _PlayingPageState extends State<PlayingPage> {
                           });
                         } else {
                           // Si ya se han generado 6 preguntas, se termina el juego
-                          Get.to(const WelcomePage());
+                          Get.to(()=> const WelcomePage());
                           calculatorController.reset();
                         }
                         // Limpia la entrada

@@ -1,6 +1,10 @@
 import 'package:f_web_authentication/ui/pages/content/playing_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loggy/loggy.dart';
+
+import '../../controller/authentication_controller.dart';
+import '../authentication/login_page.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -10,6 +14,7 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
+  AuthenticationController authenticationController = Get.find();
   final Map<String, String> optionsMap = {
     'Suma': '+',
     'Resta': '-',
@@ -18,11 +23,26 @@ class _WelcomePageState extends State<WelcomePage> {
   };
   String selectedOp = 'Suma'; // Valor inicial del ComboBox
 
+  _logout() async {
+    try {
+      await authenticationController.logOut();
+    } catch (e) {
+      logInfo(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bienvenido'),
+        actions: [
+          IconButton(
+              icon: const Icon(Icons.exit_to_app),
+              onPressed: () {
+                _logout();
+              })
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -55,8 +75,11 @@ class _WelcomePageState extends State<WelcomePage> {
                 print(optionsMap[selectedOp]);
 
                 Get.to(
-                  () => const PlayingPage(),
-                  arguments: optionsMap[selectedOp], // Aquí pasas el nivel de dificultad
+                  () => Obx(() => authenticationController.isLogged
+                      ? const PlayingPage() //EditUserPage(token:authenticationController.token)
+                      : const LoginPage()),
+                  arguments: optionsMap[
+                      selectedOp], // Aquí pasas el nivel de dificultad
                 );
               },
               child: const Text('¡Jugar!'),

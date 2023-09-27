@@ -5,27 +5,29 @@ import 'package:get/get.dart';
 import '../../controller/user_controller.dart';
 
 class EditUserPage extends StatefulWidget {
-  const EditUserPage({super.key});
-
+  final String token;
+  const EditUserPage({super.key, required this.token});
+  
   @override
   State<EditUserPage> createState() => _EditUserPageState();
+  
 }
 
 class _EditUserPageState extends State<EditUserPage> {
-  User user = Get.arguments[0];
-  final controllerFirstName = TextEditingController();
-  final controllerLastName = TextEditingController();
-  final controllerEmail = TextEditingController();
+  final controllerschool = TextEditingController();
+  final controllerbirthdate = TextEditingController();
+  final controllergrade = TextEditingController();
+  String em="";
 
   @override
   Widget build(BuildContext context) {
     UserController userController = Get.find();
-    controllerFirstName.text = user.firstName;
-    controllerLastName.text = user.lastName;
-    controllerEmail.text = user.email;
+    controllerschool.text = "user.school";
+    controllerbirthdate.text = "user.birthdate";
+    controllergrade.text = "user.email";
     return Scaffold(
       appBar: AppBar(
-        title: Text("${user.firstName} ${user.lastName}"),
+        title: Text("${"user.school"} ${"user.birthdate"}"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -35,7 +37,7 @@ class _EditUserPageState extends State<EditUserPage> {
               height: 20,
             ),
             TextField(
-                controller: controllerFirstName,
+                controller: controllerschool,
                 decoration: const InputDecoration(
                   labelText: 'First Name',
                 )),
@@ -43,7 +45,7 @@ class _EditUserPageState extends State<EditUserPage> {
               height: 20,
             ),
             TextField(
-                controller: controllerLastName,
+                controller: controllerbirthdate,
                 decoration: const InputDecoration(
                   labelText: 'Last Name',
                 )),
@@ -51,10 +53,10 @@ class _EditUserPageState extends State<EditUserPage> {
               height: 20,
             ),
             TextField(
-                controller: controllerEmail,
+                controller: controllergrade,
                 keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
-                  labelText: 'Email',
+                  labelText: 'Grade',
                 )),
             const SizedBox(
               height: 20,
@@ -69,10 +71,11 @@ class _EditUserPageState extends State<EditUserPage> {
                       child: ElevatedButton(
                           onPressed: () async {
                             await userController.updateUser(User(
-                                id: user.id,
-                                email: controllerEmail.text,
-                                firstName: controllerFirstName.text,
-                                lastName: controllerLastName.text));
+                                email: em,
+                                grade: controllergrade.text,
+                                school: controllerschool.text,
+                                birthdate: controllerbirthdate.text))
+                                ;
                             Get.back();
                           },
                           child: const Text("Update")))
