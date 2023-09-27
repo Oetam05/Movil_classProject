@@ -21,7 +21,8 @@ class _FirebaseSignUpState extends State<SignUp> {
 
   _signup(theEmail, thePassword, theSchool, theBirthdate, theGrade) async {
     try {
-      await authenticationController.signUp(theEmail, thePassword, theSchool, theBirthdate, theGrade);
+      await authenticationController.signUp(
+          theEmail, thePassword, theSchool, theBirthdate, theGrade);
 
       Get.snackbar(
         "Sign Up",
@@ -113,8 +114,7 @@ class _FirebaseSignUpState extends State<SignUp> {
                         TextFormField(
                           keyboardType: TextInputType.number,
                           controller: controllerGrade,
-                          decoration:
-                              const InputDecoration(labelText: "Grade"),
+                          decoration: const InputDecoration(labelText: "Grade"),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               logError('SignUp validation empty grade');
@@ -152,8 +152,12 @@ class _FirebaseSignUpState extends State<SignUp> {
                               FocusScope.of(context).requestFocus(FocusNode());
                               if (_formKey.currentState!.validate()) {
                                 logInfo('SignUp validation form ok');
-                                await _signup(controllerEmail.text,
-                                    controllerPassword.text, controllerSchool.text, controllerBirthdate.text, controllerGrade.text);
+                                await _signup(
+                                    controllerEmail.text,
+                                    controllerPassword.text,
+                                    controllerSchool.text,
+                                    controllerBirthdate.text,
+                                    controllerGrade.text);
                               } else {
                                 logError('SignUp validation form nok');
                               }

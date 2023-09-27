@@ -54,12 +54,14 @@ class CalculatorUseCase {
     } else if (op == '*') {
       correct = n1 * n2;
     }
-
+    final temp = question.split(' ');
+    print(temp);
     if (answer == correct.toString()) {
-      corrects.add('$question=$answer');
+      corrects.add('${temp[2] + temp[3] + temp[4]}=$answer');
       score = (201 / (time + 1) + 100) ~/ 1;
     } else {
-      incorrects.add('$question=$correct you sent $answer');
+      incorrects
+          .add('${temp[2] + temp[3] + temp[4]}=$correct you sent $answer');
       score = -100;
     }
     return score;
@@ -69,5 +71,7 @@ class CalculatorUseCase {
     Session sesion =
         Session(score: score, corrects: corrects, incorrects: incorrects);
     _repository.saveScore(sesion);
+    corrects = [];
+    incorrects = [];
   }
 }

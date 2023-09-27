@@ -15,15 +15,17 @@ class WelcomePage extends StatefulWidget {
 
 class _WelcomePageState extends State<WelcomePage> {
   AuthenticationController authenticationController = Get.find();
+
   final Map<String, String> optionsMap = {
     'Suma': '+',
     'Resta': '-',
     'Suma y Resta': '+-',
     'Multiplicación': '*',
   };
+
   String selectedOp = 'Suma'; // Valor inicial del ComboBox
 
-  _logout() async {
+  void _logout() async {
     try {
       await authenticationController.logOut();
     } catch (e) {
@@ -38,24 +40,28 @@ class _WelcomePageState extends State<WelcomePage> {
         title: const Text('Bienvenido'),
         actions: [
           IconButton(
+              key: const Key('logoutButton'),
               icon: const Icon(Icons.exit_to_app),
               onPressed: () {
                 _logout();
-              })
+              }),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          key: const Key('bodyColumn'),
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Text(
-              'Seleccione la operación', // Puedes reemplazar esto con tu lógica real
+              'Seleccione la operación',
+              key: Key('titleText'),
               style: TextStyle(fontSize: 24),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(key: Key('space1'), height: 20),
             DropdownButton<String>(
+              key: const Key('dropdown'),
               value: selectedOp,
               items: optionsMap.keys.map((String option) {
                 return DropdownMenuItem<String>(
@@ -69,17 +75,16 @@ class _WelcomePageState extends State<WelcomePage> {
                 });
               },
             ),
-            const SizedBox(height: 20),
+            const SizedBox(key: Key('space2'), height: 20),
             ElevatedButton(
+              key: const Key('playButton'),
               onPressed: () {
                 print(optionsMap[selectedOp]);
-
                 Get.to(
                   () => Obx(() => authenticationController.isLogged
-                      ? const PlayingPage() //EditUserPage(token:authenticationController.token)
+                      ? const PlayingPage()
                       : const LoginPage()),
-                  arguments: optionsMap[
-                      selectedOp], // Aquí pasas el nivel de dificultad
+                  arguments: optionsMap[selectedOp],
                 );
               },
               child: const Text('¡Jugar!'),

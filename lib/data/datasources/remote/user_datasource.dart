@@ -6,7 +6,7 @@ import '../../../domain/models/user.dart';
 import 'package:http/http.dart' as http;
 
 class UserDataSource {
-  final String apiKey = 'Bmm6cV';
+  final String apiKey = 'c1pV49';
 
   Future<List<User>> getUsers() async {
     List<User> users = [];

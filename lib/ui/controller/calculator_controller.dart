@@ -19,7 +19,7 @@ class CalculatorController extends GetxController {
     if (op.length == 1) {
       if (i < 6) {
         i++;
-        return calculatorUseCase.generateRandomNumbers(difficulty, op);
+        return '${calculatorUseCase.generateRandomNumbers(difficulty, op)} \nScore:  \t$score';
       } else {
         calculatorUseCase.saveScore(score);
         return "Game Over \n Score: $score";
@@ -27,12 +27,10 @@ class CalculatorController extends GetxController {
     } else {
       if (i < 3) {
         i++;
-        return calculatorUseCase.generateRandomNumbers(
-            difficulty, op.substring(0, 1));
+        return '${calculatorUseCase.generateRandomNumbers(difficulty, op.substring(0, 1))}\nScore: \t$score';
       } else if (i < 6 && i >= 3) {
         i++;
-        return calculatorUseCase.generateRandomNumbers(
-            difficulty, op.substring(1));
+        return '${calculatorUseCase.generateRandomNumbers(difficulty, op.substring(1))}\nScore: \t$score';
       } else {
         return "Game Over \n Score: $score";
       }
@@ -55,7 +53,7 @@ class CalculatorController extends GetxController {
 
   void calculate(String question, int time) {
     score += calculatorUseCase.calculate(question, userInput.value, time);
-    if(score<0){
+    if (score < 0) {
       score = 0;
     }
   }

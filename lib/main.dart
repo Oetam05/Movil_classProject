@@ -22,7 +22,7 @@ void main() {
   Get.put(AuthenticationUseCase());
   Get.put(UserUseCase());
   Get.put(AuthenticationController());
-  Get.put(UserController());  
+  Get.put(UserController());
   Get.put(CalculatorUseCase());
   Get.put(CalculatorController());
 

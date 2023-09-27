@@ -28,8 +28,6 @@ class _PlayingPageState extends State<PlayingPage> {
     calculatorController.clearInput();
   }
 
-
-
   final buttonStyle = ElevatedButton.styleFrom(
     foregroundColor: Colors.white, backgroundColor: Colors.blue,
     shape: RoundedRectangleBorder(
@@ -43,31 +41,39 @@ class _PlayingPageState extends State<PlayingPage> {
   Widget build(BuildContext context) {
     DateTime momentoGeneracion = DateTime.now();
     return Scaffold(
-      appBar: AppBar(title: const Text("Welcome"), actions: [        
+      appBar: AppBar(title: const Text("Welcome"), actions: [
         IconButton(
+            key: const Key('refreshButton'),
             icon: const Icon(Icons.access_time),
             onPressed: () {
               userController.simulateProcess();
             }),
       ]),
       body: Column(
+        key: const Key('bodyColumn'),
         children: [
           Padding(
+            key: const Key('questionPadding'),
             padding: const EdgeInsets.all(16.0),
             child: Text(
               question,
+              key: const Key('questionText'),
               style: const TextStyle(fontSize: 24.0),
             ),
           ),
           Padding(
+            key: const Key('inputPadding'),
             padding: const EdgeInsets.all(16.0),
             child: Obx(() => Text(
                   calculatorController.userInput.value,
+                  key: const Key('inputText'),
                   style: const TextStyle(fontSize: 24.0),
                 )),
           ),
           Expanded(
+            key: const Key('gridView'),
             child: GridView.builder(
+              key: const Key('grid'),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3, // 3 columnas en la cuadrícula
               ),
@@ -75,8 +81,10 @@ class _PlayingPageState extends State<PlayingPage> {
               itemBuilder: (BuildContext context, int index) {
                 final numero = index + 1;
                 return GestureDetector(
+                  key: Key('button_$numero'),
                   onTap: () {},
                   child: ElevatedButton(
+                    key: Key('elevatedButton_$numero'),
                     style: buttonStyle, // Aplica el estilo personalizado
                     onPressed: () {
                       // Agrega la lógica de escritura en el campo de texto
@@ -100,7 +108,7 @@ class _PlayingPageState extends State<PlayingPage> {
                           });
                         } else {
                           // Si ya se han generado 6 preguntas, se termina el juego
-                          Get.to(()=> const WelcomePage());
+                          Get.to(() => const WelcomePage());
                           calculatorController.reset();
                         }
                         // Limpia la entrada
