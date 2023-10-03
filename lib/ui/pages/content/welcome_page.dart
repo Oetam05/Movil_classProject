@@ -28,6 +28,7 @@ class _WelcomePageState extends State<WelcomePage> {
   void _logout() async {
     try {
       await authenticationController.logOut();
+      Get.off(() => const LoginPage());
     } catch (e) {
       logInfo(e);
     }
@@ -78,9 +79,8 @@ class _WelcomePageState extends State<WelcomePage> {
             const SizedBox(key: Key('space2'), height: 20),
             ElevatedButton(
               key: const Key('playButton'),
-              onPressed: () {
-                print(optionsMap[selectedOp]);
-                Get.to(
+              onPressed: () {                
+                Get.off(
                   () => Obx(() => authenticationController.isLogged
                       ? const PlayingPage()
                       : const LoginPage()),

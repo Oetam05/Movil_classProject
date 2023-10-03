@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'package:f_web_authentication/domain/models/Session.dart';
-import 'package:f_web_authentication/domain/use_case/calculator_usecase.dart';
 import 'package:loggy/loggy.dart';
 import '../../../domain/models/user.dart';
 import 'package:http/http.dart' as http;
 
 class UserDataSource {
-  final String apiKey = 'c1pV49';
+  final String apiKey = 'CHbS4X';
 
   Future<List<User>> getUsers() async {
     List<User> users = [];
@@ -104,15 +103,16 @@ class UserDataSource {
     }
   }
 
-  Future<bool> saveScore(Session sesion) async {
+  Future<bool> saveScore(Session sesion, String user) async {
     logInfo("Web service, Adding user");
-
+    final sesionData=sesion.toJson();
+    sesionData["user"]=user;
     final response = await http.post(
       Uri.parse("https://retoolapi.dev/$apiKey/data"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(sesion.toJson()),
+      body: jsonEncode(sesionData),
     );
 
     if (response.statusCode == 201) {

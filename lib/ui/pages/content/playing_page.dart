@@ -108,7 +108,7 @@ class _PlayingPageState extends State<PlayingPage> {
                           });
                         } else {
                           // Si ya se han generado 6 preguntas, se termina el juego
-                          Get.to(() => const WelcomePage());
+                          Get.off(() => const WelcomePage());
                           calculatorController.reset();
                         }
                         // Limpia la entrada

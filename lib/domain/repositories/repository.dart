@@ -1,6 +1,5 @@
 import 'package:f_web_authentication/data/datasources/remote/authentication_datasource.dart';
 import 'package:f_web_authentication/domain/models/Session.dart';
-import 'package:f_web_authentication/domain/use_case/calculator_usecase.dart';
 
 import '../../data/datasources/remote/user_datasource.dart';
 import '../models/user.dart';
@@ -9,10 +8,11 @@ class Repository {
   late AuthenticationDatatasource _authenticationDataSource;
   late UserDataSource _userDatatasource;
   String token = "";
+  String user ="default_user";
   String get getToken => token;
   // the base url of the API should end without the /
   final String _baseUrl =
-      'http://ip172-19-0-46-cka3qo6fml8g00an1f9g-8000.direct.labs.play-with-docker.com';
+      'http://ip172-18-0-9-ckdk1ucsnmng00do5vag-8000.direct.labs.play-with-docker.com';
 
   Repository() {
     _authenticationDataSource = AuthenticationDatatasource();
@@ -21,6 +21,7 @@ class Repository {
 
   Future<bool> login(String email, String password) async {
     token = await _authenticationDataSource.login(_baseUrl, email, password);
+    user=email;
     return true;
   }
 
@@ -46,5 +47,5 @@ class Repository {
       await _userDatatasource.simulateProcess(_baseUrl, token);
 
   Future<bool> saveScore(Session sesion) async =>
-      await _userDatatasource.saveScore(sesion);
+      await _userDatatasource.saveScore(sesion, user);
 }

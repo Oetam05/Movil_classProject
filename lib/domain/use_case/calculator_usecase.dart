@@ -55,7 +55,6 @@ class CalculatorUseCase {
       correct = n1 * n2;
     }
     final temp = question.split(' ');
-    print(temp);
     if (answer == correct.toString()) {
       corrects.add('${temp[2] + temp[3] + temp[4]}=$answer');
       score = (201 / (time + 1) + 100) ~/ 1;
