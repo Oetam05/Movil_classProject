@@ -1,112 +1,15 @@
 import 'dart:convert';
 import 'package:f_web_authentication/domain/models/Session.dart';
 import 'package:loggy/loggy.dart';
-import '../../../domain/models/user.dart';
 import 'package:http/http.dart' as http;
 
 class UserDataSource {
-  final String apiKey = 'CHbS4X';
-
-  Future<List<User>> getUsers() async {
-    List<User> users = [];
-    var request = Uri.parse("https://retoolapi.dev/$apiKey/data")
-        .resolveUri(Uri(queryParameters: {
-      "format": 'json',
-    }));
-
-    var response = await http.get(request);
-
-    if (response.statusCode == 200) {
-      //logInfo(response.body);
-      final data = jsonDecode(response.body);
-
-      users = List<User>.from(data.map((x) => User.fromJson(x)));
-    } else {
-      logError("Got error code ${response.statusCode}");
-      return Future.error('Error code ${response.statusCode}');
-    }
-
-    return Future.value(users);
-  }
-
-  Future<bool> addUser(User user) async {
-    logInfo("Web service, Adding user");
-
-    final response = await http.post(
-      Uri.parse("https://retoolapi.dev/$apiKey/data"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(user.toJson()),
-    );
-
-    if (response.statusCode == 201) {
-      //logInfo(response.body);
-      return Future.value(true);
-    } else {
-      logError("Got error code ${response.statusCode}");
-      return Future.value(false);
-    }
-  }
-
-  Future<bool> updateUser(User user) async {
-    final response = await http.put(
-      Uri.parse("https://retoolapi.dev/$apiKey/data/${user.id}"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(user.toJson()),
-    );
-
-    if (response.statusCode == 201) {
-      //logInfo(response.body);
-      return Future.value(true);
-    } else {
-      logError("Got error code ${response.statusCode}");
-      return Future.value(false);
-    }
-  }
-
-  Future<bool> deleteUser(int id) async {
-    final response = await http.delete(
-      Uri.parse("https://retoolapi.dev/$apiKey/data/$id"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-
-    if (response.statusCode == 201) {
-      //logInfo(response.body);
-      return Future.value(true);
-    } else {
-      logError("Got error code ${response.statusCode}");
-      return Future.value(false);
-    }
-  }
-
-  Future<bool> simulateProcess(String baseUrl, String token) async {
-    final response = await http.get(
-      Uri.parse("$baseUrl/me"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $token'
-      },
-    );
-
-    logInfo(response.statusCode);
-    if (response.statusCode == 200) {
-      logInfo('simulateProcess access ok');
-      return Future.value(true);
-    } else {
-      logError("Got error code ${response.statusCode}");
-      return Future.error('Error code ${response.statusCode}');
-    }
-  }
+  final String apiKey = 'q6VG85';
 
   Future<bool> saveScore(Session sesion, String user) async {
     logInfo("Web service, Adding user");
-    final sesionData=sesion.toJson();
-    sesionData["user"]=user;
+    final sesionData = sesion.toJson();
+    sesionData["user"] = user;
     final response = await http.post(
       Uri.parse("https://retoolapi.dev/$apiKey/data"),
       headers: <String, String>{
@@ -121,6 +24,26 @@ class UserDataSource {
     } else {
       logError("Got error code ${response.statusCode}");
       return Future.value(false);
+    }
+  }
+
+  Future<int> getHighScore(String op, String user) async {    
+    final response = await http.get(
+      Uri.parse("https://retoolapi.dev/$apiKey/data?_sort=score&_order=desc&user=$user&op=$op"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);      
+      if (data.isNotEmpty) {        
+        return Future.value(data[0]["score"]);
+      } else {        
+        return Future.value(77);
+      }
+    } else {
+      logError("Got error code ${response.statusCode}");
+      return Future.value(0);
     }
   }
 }

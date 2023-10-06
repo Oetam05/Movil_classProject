@@ -3,14 +3,15 @@ class Session {
     this.id,
     required this.score,
     required this.corrects,
-    required this.incorrects,
+    required this.incorrects, 
+    required this.op,
   });
 
   int? id;
   int score;
   List<String> corrects;
   List<String> incorrects;
-
+  String op;
   int get getScore => score;
 
   List<String> get getCorrects => corrects;
@@ -21,6 +22,7 @@ class Session {
         score: json["score"] ?? "someScore",
         corrects: json["corrects"] ?? "someCorrects",
         incorrects: json["incorrects"] ?? "someincorrects",
+        op: json["op"] ?? "someOp",
       );
 
   Map<String, dynamic> toJson() => {
@@ -28,5 +30,6 @@ class Session {
         "score": score,
         "corrects": corrects,
         "incorrects": incorrects,
+        "op": op,
       };
 }

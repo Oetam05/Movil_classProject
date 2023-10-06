@@ -2,7 +2,6 @@ import 'package:f_web_authentication/ui/pages/content/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controller/authentication_controller.dart';
-import '../../controller/user_controller.dart';
 import '../../controller/calculator_controller.dart';
 
 class PlayingPage extends StatefulWidget {
@@ -11,8 +10,7 @@ class PlayingPage extends StatefulWidget {
   State<PlayingPage> createState() => _PlayingPageState();
 }
 
-class _PlayingPageState extends State<PlayingPage> {
-  UserController userController = Get.find();
+class _PlayingPageState extends State<PlayingPage> {  
   AuthenticationController authenticationController = Get.find();
   final CalculatorController calculatorController = Get.find();
   String question = "";
@@ -21,6 +19,7 @@ class _PlayingPageState extends State<PlayingPage> {
   void initState() {
     super.initState();
     final operation = Get.arguments as String;
+    print(operation);
     calculatorController.setOp(operation);
 
     question = calculatorController
@@ -41,14 +40,7 @@ class _PlayingPageState extends State<PlayingPage> {
   Widget build(BuildContext context) {
     DateTime momentoGeneracion = DateTime.now();
     return Scaffold(
-      appBar: AppBar(title: const Text("Welcome"), actions: [
-        IconButton(
-            key: const Key('refreshButton'),
-            icon: const Icon(Icons.access_time),
-            onPressed: () {
-              userController.simulateProcess();
-            }),
-      ]),
+      appBar: AppBar(title: const Text("Welcome")),
       body: Column(
         key: const Key('bodyColumn'),
         children: [

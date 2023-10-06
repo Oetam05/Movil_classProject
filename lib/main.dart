@@ -1,9 +1,7 @@
 import 'package:f_web_authentication/domain/use_case/calculator_usecase.dart';
-import 'package:f_web_authentication/domain/use_case/user_usecase.dart';
 import 'package:f_web_authentication/ui/central.dart';
 import 'package:f_web_authentication/ui/controller/authentication_controller.dart';
 import 'package:f_web_authentication/ui/controller/calculator_controller.dart';
-import 'package:f_web_authentication/ui/controller/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
@@ -20,9 +18,7 @@ void main() {
 
   Get.put(Repository());
   Get.put(AuthenticationUseCase());
-  Get.put(UserUseCase());
   Get.put(AuthenticationController());
-  Get.put(UserController());
   Get.put(CalculatorUseCase());
   Get.put(CalculatorController());
 

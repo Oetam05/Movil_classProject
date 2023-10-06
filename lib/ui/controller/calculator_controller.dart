@@ -21,7 +21,7 @@ class CalculatorController extends GetxController {
         i++;
         return '${calculatorUseCase.generateRandomNumbers(difficulty, op)} \nScore:  \t$score';
       } else {
-        calculatorUseCase.saveScore(score);
+        calculatorUseCase.saveScore(score, op);
         return "Game Over \n Score: $score";
       }
     } else {
@@ -32,9 +32,14 @@ class CalculatorController extends GetxController {
         i++;
         return '${calculatorUseCase.generateRandomNumbers(difficulty, op.substring(1))}\nScore: \t$score';
       } else {
+        calculatorUseCase.saveScore(score, op);
         return "Game Over \n Score: $score";
       }
     }
+  }
+
+  Future<int> getHighScore(String op) async{
+    return calculatorUseCase.getHighScore(op);
   }
 
   void reset() {

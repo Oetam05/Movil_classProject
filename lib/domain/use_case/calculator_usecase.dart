@@ -66,11 +66,15 @@ class CalculatorUseCase {
     return score;
   }
 
-  void saveScore(int score) {
+  void saveScore(int score, String op) {
     Session sesion =
-        Session(score: score, corrects: corrects, incorrects: incorrects);
+        Session(score: score, corrects: corrects, incorrects: incorrects, op: op);
     _repository.saveScore(sesion);
     corrects = [];
     incorrects = [];
+  }
+
+  Future<int> getHighScore(String op) {
+    return _repository.getHighScore(op);
   }
 }

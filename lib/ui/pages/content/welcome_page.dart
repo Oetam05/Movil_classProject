@@ -1,10 +1,10 @@
+import 'package:f_web_authentication/ui/controller/calculator_controller.dart';
 import 'package:f_web_authentication/ui/pages/content/playing_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
 
 import '../../controller/authentication_controller.dart';
-import '../authentication/login_page.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -15,6 +15,24 @@ class WelcomePage extends StatefulWidget {
 
 class _WelcomePageState extends State<WelcomePage> {
   AuthenticationController authenticationController = Get.find();
+  CalculatorController calculatorController = Get.find();
+  var highScoreSuma = 0.obs;
+  var highScoreResta = 0.obs;
+  var highScoreSumaResta = 0.obs;
+  var highScoreMultiplicacion = 0.obs;
+  @override
+  void initState() {
+    super.initState();
+    getHighScores();
+  }
+
+  void getHighScores() async {
+    highScoreSuma.value = await calculatorController.getHighScore("%2B");
+    highScoreResta.value = await calculatorController.getHighScore("-");
+    highScoreSumaResta.value = await calculatorController.getHighScore("%2B-");
+    highScoreMultiplicacion.value =
+        await calculatorController.getHighScore("*");
+  }
 
   final Map<String, String> optionsMap = {
     'Suma': '+',
@@ -22,13 +40,11 @@ class _WelcomePageState extends State<WelcomePage> {
     'Suma y Resta': '+-',
     'Multiplicación': '*',
   };
-
   String selectedOp = 'Suma'; // Valor inicial del ComboBox
 
   void _logout() async {
     try {
       await authenticationController.logOut();
-      Get.off(() => const LoginPage());
     } catch (e) {
       logInfo(e);
     }
@@ -60,7 +76,7 @@ class _WelcomePageState extends State<WelcomePage> {
               key: Key('titleText'),
               style: TextStyle(fontSize: 24),
             ),
-            const SizedBox(key: Key('space1'), height: 20),
+            const SizedBox(height: 20),
             DropdownButton<String>(
               key: const Key('dropdown'),
               value: selectedOp,
@@ -76,19 +92,26 @@ class _WelcomePageState extends State<WelcomePage> {
                 });
               },
             ),
-            const SizedBox(key: Key('space2'), height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               key: const Key('playButton'),
-              onPressed: () {                
+              onPressed: () {
                 Get.off(
-                  () => Obx(() => authenticationController.isLogged
-                      ? const PlayingPage()
-                      : const LoginPage()),
+                  () => const PlayingPage(),
                   arguments: optionsMap[selectedOp],
                 );
               },
               child: const Text('¡Jugar!'),
             ),
+            const SizedBox(height: 20),
+            Obx(
+              () => Center(
+                child: Text(
+                  "HighScore:${selectedOp == 'Suma' ? highScoreSuma.value : selectedOp == 'Resta' ? highScoreResta.value : selectedOp == 'Suma y Resta' ? highScoreSumaResta.value : highScoreMultiplicacion.value}",
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+            )
           ],
         ),
       ),

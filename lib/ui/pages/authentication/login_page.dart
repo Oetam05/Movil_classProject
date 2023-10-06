@@ -87,6 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 20,
                     ),
                     OutlinedButton(
+                        key: const Key('loginButton'),
                         onPressed: () async {
                           // this line dismiss the keyboard by taking away the focus of the TextFormField and giving it to an unused
                           FocusScope.of(context).requestFocus(FocusNode());
