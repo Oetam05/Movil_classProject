@@ -4,11 +4,6 @@
 // utility in the flutter_test package. For example, you can send tap and scroll
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
-
-import 'dart:math';
-
-import 'package:f_web_authentication/ui/pages/authentication/login_page.dart';
-import 'package:f_web_authentication/ui/pages/content/playing_page.dart';
 import 'package:f_web_authentication/ui/pages/content/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

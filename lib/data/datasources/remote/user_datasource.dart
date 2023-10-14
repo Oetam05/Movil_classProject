@@ -39,7 +39,7 @@ class UserDataSource {
       if (data.isNotEmpty) {        
         return Future.value(data[0]["score"]);
       } else {        
-        return Future.value(77);
+        return Future.value(0);
       }
     } else {
       logError("Got error code ${response.statusCode}");

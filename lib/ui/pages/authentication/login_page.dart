@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
 import '../../controller/authentication_controller.dart';
+import '../content/welcome_page.dart';
 import 'signup.dart';
 
 class LoginPage extends StatefulWidget {
@@ -96,6 +97,10 @@ class _LoginPageState extends State<LoginPage> {
                           if (_formKey.currentState!.validate()) {
                             await _login(
                                 controllerEmail.text, controllerPassword.text);
+                                if(authenticationController.isLogged){
+                                  Get.off(()=>const WelcomePage());
+                                }
+                                
                           }
                         },
                         child: const Text("Submit")),

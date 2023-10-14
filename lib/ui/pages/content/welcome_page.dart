@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
 
 import '../../controller/authentication_controller.dart';
+import '../authentication/login_page.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -23,6 +24,7 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   void initState() {
     super.initState();
+    // if (!authenticationController.isLogged) Get.off(() => const LoginPage());
     getHighScores();
   }
 
@@ -45,6 +47,7 @@ class _WelcomePageState extends State<WelcomePage> {
   void _logout() async {
     try {
       await authenticationController.logOut();
+      Get.off(() => const LoginPage());
     } catch (e) {
       logInfo(e);
     }
