@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:f_web_authentication/data/datasources/remote/authentication_datasource.dart';
 import 'package:f_web_authentication/domain/models/Session.dart';
 
@@ -11,7 +13,7 @@ class Repository {
   String get getToken => token;
   // the base url of the API should end without the /
   final String _baseUrl =
-      'http://ip172-18-0-12-cklh684snmng00fm2pug-8000.direct.labs.play-with-docker.com';
+      'http://ip172-18-0-23-cklms1ufml8g00abdkb0-8000.direct.labs.play-with-docker.com';
 
   Repository() {
     _authenticationDataSource = AuthenticationDatatasource();
@@ -31,8 +33,8 @@ class Repository {
 
   Future<bool> logOut() async => await _authenticationDataSource.logOut();
 
-  Future<bool> saveScore(Session sesion) async =>
-      await _userDatatasource.saveScore(sesion, user);
+  Future<bool> saveScore(Session sesion) async =>      
+      await _userDatatasource.saveScore(sesion);
 
   Future<int> getHighScore(String op) async {
     return _userDatatasource.getHighScore(op, user);

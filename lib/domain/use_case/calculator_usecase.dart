@@ -68,7 +68,7 @@ class CalculatorUseCase {
 
   void saveScore(int score, String op) {
     Session sesion =
-        Session(score: score, corrects: corrects, incorrects: incorrects, op: op);
+        Session(score: score, corrects: corrects, incorrects: incorrects, op: op, user: _repository.user);
     _repository.saveScore(sesion);
     corrects = [];
     incorrects = [];
