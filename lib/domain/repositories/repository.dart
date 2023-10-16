@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:f_web_authentication/data/datasources/remote/authentication_datasource.dart';
 import 'package:f_web_authentication/domain/models/Session.dart';
 
@@ -13,7 +11,7 @@ class Repository {
   String get getToken => token;
   // the base url of the API should end without the /
   final String _baseUrl =
-      'http://ip172-18-0-23-cklms1ufml8g00abdkb0-8000.direct.labs.play-with-docker.com';
+      'http://ip172-18-0-76-ckmr7fogftqg00cno44g-8000.direct.labs.play-with-docker.com';
 
   Repository() {
     _authenticationDataSource = AuthenticationDatatasource();
@@ -23,6 +21,9 @@ class Repository {
   Future<bool> login(String email, String password) async {
     token = await _authenticationDataSource.login(_baseUrl, email, password);
     user = email;
+    if (token != "") {
+      _userDatatasource.getApiSessions(user);
+    }
     return true;
   }
 

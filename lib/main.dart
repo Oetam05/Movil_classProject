@@ -21,7 +21,7 @@ Future<List<Box>> _openBox() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await _openBox();
+  await _openBox();  
   Loggy.initLoggy(
     logPrinter: const PrettyPrinter(
       showColors: true,

@@ -23,13 +23,13 @@ class SessionDbAdapter extends TypeAdapter<SessionDb> {
       corrects: (fields[3] as List).cast<String>(),
       incorrects: (fields[4] as List).cast<String>(),
       op: fields[5] as String,
-    );
+    )..isSynced = fields[6] as bool;
   }
 
   @override
   void write(BinaryWriter writer, SessionDb obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -41,7 +41,9 @@ class SessionDbAdapter extends TypeAdapter<SessionDb> {
       ..writeByte(4)
       ..write(obj.incorrects)
       ..writeByte(5)
-      ..write(obj.op);
+      ..write(obj.op)
+      ..writeByte(6)
+      ..write(obj.isSynced);
   }
 
   @override

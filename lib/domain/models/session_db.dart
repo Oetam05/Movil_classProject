@@ -22,6 +22,9 @@ class SessionDb extends HiveObject {
   @HiveField(5)
   String op;
 
+  @HiveField(6)
+  bool isSynced = false;
+
   SessionDb({
     this.id,
     required this.user,

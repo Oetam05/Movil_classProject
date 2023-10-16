@@ -29,9 +29,9 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   void getHighScores() async {
-    highScoreSuma.value = await calculatorController.getHighScore("%2B");
+    highScoreSuma.value = await calculatorController.getHighScore("+");
     highScoreResta.value = await calculatorController.getHighScore("-");
-    highScoreSumaResta.value = await calculatorController.getHighScore("%2B-");
+    highScoreSumaResta.value = await calculatorController.getHighScore("+-");
     highScoreMultiplicacion.value =
         await calculatorController.getHighScore("*");
   }
