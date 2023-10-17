@@ -6,7 +6,7 @@ class CalculatorController extends GetxController {
   var score = 0;
   String op = "";
   int i = 0;
-  int difficulty = 0;
+  int difficulty = 1;
   final CalculatorUseCase calculatorUseCase = Get.find();
   String generateRandomNumbers() {
     if (score > 0 && score < 200) {
@@ -19,26 +19,26 @@ class CalculatorController extends GetxController {
     if (op.length == 1) {
       if (i < 6) {
         i++;
-        return '${calculatorUseCase.generateRandomNumbers(difficulty, op)} \nScore:  \t$score';
+        return '${calculatorUseCase.generateRandomNumbers(difficulty, op)} \nScore:\t$score \t$difficulty';
       } else {
         calculatorUseCase.saveScore(score, op);
-        return "Game Over \n Score: $score";
+        return "Game Over \n Score: $score \t$difficulty";
       }
     } else {
       if (i < 3) {
         i++;
-        return '${calculatorUseCase.generateRandomNumbers(difficulty, op.substring(0, 1))}\nScore: \t$score';
+        return '${calculatorUseCase.generateRandomNumbers(difficulty, op.substring(0, 1))}\nScore:\t$score \t$difficulty';
       } else if (i < 6 && i >= 3) {
         i++;
-        return '${calculatorUseCase.generateRandomNumbers(difficulty, op.substring(1))}\nScore: \t$score';
+        return '${calculatorUseCase.generateRandomNumbers(difficulty, op.substring(1))}\nScore:\t$score \t$difficulty';
       } else {
         calculatorUseCase.saveScore(score, op);
-        return "Game Over \n Score: $score";
+        return "Game Over \n Score: $score \t$difficulty";
       }
     }
   }
 
-  Future<int> getHighScore(String op) async{
+  Future<int> getHighScore(String op) async {
     return calculatorUseCase.getHighScore(op);
   }
 

@@ -1,6 +1,7 @@
 import 'package:f_web_authentication/ui/pages/content/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import '../../controller/authentication_controller.dart';
 import '../../controller/calculator_controller.dart';
 
@@ -10,20 +11,37 @@ class PlayingPage extends StatefulWidget {
   State<PlayingPage> createState() => _PlayingPageState();
 }
 
-class _PlayingPageState extends State<PlayingPage> {  
+List<Icon> getStars(String difficulty) {
+  int stars = int.parse(difficulty);
+
+  return List.generate(stars, (_) {
+    return const Icon(
+      Icons.star,
+      size: 32,
+      color: Colors.yellow,
+    );
+  });
+}
+
+class _PlayingPageState extends State<PlayingPage> {
   AuthenticationController authenticationController = Get.find();
   final CalculatorController calculatorController = Get.find();
   String question = "";
   int finish = 0;
+  var difficulty = '1';
+  var stars = getStars("1");
+
   @override
   void initState() {
     super.initState();
     final operation = Get.arguments as String;
-    print(operation);
     calculatorController.setOp(operation);
 
-    question = calculatorController
-        .generateRandomNumbers(); // Genera nuevos números aleatorios cuando entras a la pantalla
+    question = calculatorController.generateRandomNumbers();
+    print(question.split(
+        '\t')); // Genera nuevos números aleatorios cuando entras a la pantalla
+    difficulty = (question.split('\t')[2]);
+    question = question.split('\n')[0];
     calculatorController.clearInput();
   }
 
@@ -45,10 +63,17 @@ class _PlayingPageState extends State<PlayingPage> {
         key: const Key('bodyColumn'),
         children: [
           Padding(
+            key: const Key('difficultyPadding'),
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: stars,
+            ),
+          ),
+          Padding(
             key: const Key('questionPadding'),
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              question,
+              question.substring(0, question.length - 1),
               key: const Key('questionText'),
               style: const TextStyle(fontSize: 24.0),
             ),
@@ -97,6 +122,11 @@ class _PlayingPageState extends State<PlayingPage> {
                           setState(() {
                             question =
                                 calculatorController.generateRandomNumbers();
+                            difficulty = finish < 5
+                                ? (question.split('\t')[2])
+                                : difficulty;
+                            stars = getStars(difficulty);
+                            question = question.split('\n')[0];
                           });
                         } else {
                           // Si ya se han generado 6 preguntas, se termina el juego
