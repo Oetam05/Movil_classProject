@@ -17,7 +17,6 @@ class UserDataSource {
     var hiveBox = Hive.box('session');
     // Obtener el último ID almacenado
     int lastLocalId = hiveBox.values.isEmpty ? 0 : hiveBox.values.last.id;
-    logInfo("Last local id: $lastLocalId");
     var sdb = SessionDb(
       id: lastLocalId + 1,
       user: sesion.user,
@@ -52,7 +51,7 @@ class UserDataSource {
       }
     } else {
       logInfo('Sin conexion a internet');
-      return Future.value(false);
+      return Future.value(true);
     }
   }
 
@@ -65,8 +64,6 @@ class UserDataSource {
         .toList();
     if (hiveSessions.isNotEmpty) {
       for (final session in hiveSessions) {
-        logInfo(
-            "key: ${session.key} user: ${session.user} op: ${session.op} score: ${session.score} isSynced: ${session.isSynced}");
         if (session.score > hiveScore) {
           hiveScore = session.score;
         }
@@ -107,18 +104,15 @@ class UserDataSource {
           final localSession = localSessionsMap[apiSession["id"]];
           if (localSession == null) {
             // La sesión de la API no está en Hive, así que la almacenamos.
-            var sdb=SessionDb(
+            var sdb = SessionDb(
                 user: apiSession["user"],
                 op: apiSession["op"],
                 score: apiSession["score"],
-                corrects: apiSession["corrects"],
-                incorrects: apiSession["incorrects"],
+                corrects: apiSession["corrects"].cast<String>(),
+                incorrects: apiSession["incorrects"].cast<String>(),
                 id: apiSession["id"]);
             sdb.isSynced = true;
             await hiveBox.add(sdb);
-          } else {
-            // La sesión de la API ya existe en Hive, puedes considerar manejar conflictos si es necesario.
-            logInfo("Session ${apiSession["id"]} already exists in Hive");
           }
         }
       } else {
@@ -126,6 +120,47 @@ class UserDataSource {
       }
     } else {
       logError("Got error code ${response.statusCode}");
+    }
+  }
+
+  void sendLocalSessions(String user) async {
+    var connectionStatus = await checkCon();
+    if (connectionStatus == ConnectivityResult.wifi ||
+        connectionStatus == ConnectivityResult.mobile) {
+      var hiveBox = Hive.box('session');
+      final localSessions =
+          hiveBox.values.where((s) => !s.isSynced && s.user == user).toList();
+      if (localSessions.isNotEmpty) {
+        logInfo("Sending ${localSessions.length} sessions");
+        for (final session in localSessions) {
+          final sesionData = {
+            "id": session.id,
+            "user": session.user,
+            "op": session.op,
+            "score": session.score,
+            "corrects": session.corrects,
+            "incorrects": session.incorrects,
+          };
+          final response = http.post(
+            Uri.parse("https://retoolapi.dev/$apiKey/data"),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode(sesionData),
+          );
+          response.then((value) {
+            if (value.statusCode == 201) {
+              session.isSynced = true;
+              hiveBox.put(session.key, session);
+              logInfo("after send id: ${session.id} ${hiveBox.get(session.key).isSynced}");
+            } else {
+              logError("Got error code ${value.statusCode}");
+            }
+          });
+        }
+      } else {
+        logInfo("No sessions to send");
+      }
     }
   }
 }

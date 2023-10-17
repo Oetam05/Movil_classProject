@@ -70,4 +70,8 @@ class CalculatorController extends GetxController {
   void clearInput() {
     userInput.value = '';
   }
+
+  void sendLocalSessions() async {
+    calculatorUseCase.sendLocalSessions();
+  }
 }

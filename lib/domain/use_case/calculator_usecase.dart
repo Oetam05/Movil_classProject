@@ -77,4 +77,8 @@ class CalculatorUseCase {
   Future<int> getHighScore(String op) {
     return _repository.getHighScore(op);
   }
+
+  void sendLocalSessions() async {
+    _repository.sendLocalSessions();
+  }
 }

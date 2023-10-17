@@ -26,6 +26,7 @@ class _WelcomePageState extends State<WelcomePage> {
     super.initState();
     // if (!authenticationController.isLogged) Get.off(() => const LoginPage());
     getHighScores();
+    calculatorController.sendLocalSessions();
   }
 
   void getHighScores() async {
