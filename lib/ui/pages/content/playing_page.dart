@@ -30,18 +30,17 @@ class _PlayingPageState extends State<PlayingPage> {
   int finish = 0;
   var difficulty = '1';
   var stars = getStars("1");
-
+  var cadena = "";
   @override
   void initState() {
     super.initState();
     final operation = Get.arguments as String;
     calculatorController.setOp(operation);
 
-    question = calculatorController.generateRandomNumbers();
-    print(question.split(
-        '\t')); // Genera nuevos números aleatorios cuando entras a la pantalla
-    difficulty = (question.split('\t')[2]);
-    question = question.split('\n')[0];
+    cadena = calculatorController
+        .generateRandomNumbers(); // Genera nuevos números aleatorios cuando entras a la pantalla
+    difficulty = (cadena.split('\t')[2]);
+    question = cadena.split('\n')[0];
     calculatorController.clearInput();
   }
 
@@ -65,9 +64,16 @@ class _PlayingPageState extends State<PlayingPage> {
           Padding(
             key: const Key('difficultyPadding'),
             padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: stars,
-            ),
+            child: Row(children: [
+              const Text(
+                'Dificultad: \t\t\t',
+                key: Key('difficultyText'),
+                style: TextStyle(fontSize: 24.0),
+              ),
+              Row(
+                children: stars,
+              ),
+            ]),
           ),
           Padding(
             key: const Key('questionPadding'),
@@ -117,16 +123,17 @@ class _PlayingPageState extends State<PlayingPage> {
                           Duration tiempoTranscurrido =
                               momentoRespuesta.difference(momentoGeneracion);
                           calculatorController.calculate(
-                              question, tiempoTranscurrido.inSeconds);
+                              cadena, tiempoTranscurrido.inSeconds);
                           finish = calculatorController.finish();
                           setState(() {
-                            question =
+                            cadena =
                                 calculatorController.generateRandomNumbers();
                             difficulty = finish < 5
-                                ? (question.split('\t')[2])
+                                ? (cadena.split('\t')[2])
                                 : difficulty;
                             stars = getStars(difficulty);
-                            question = question.split('\n')[0];
+                            question =
+                                finish < 6 ? cadena.split('\n')[0] : cadena;
                           });
                         } else {
                           // Si ya se han generado 6 preguntas, se termina el juego
