@@ -26,7 +26,8 @@ class AuthenticationDatatasource {
     }
   }
 
-  Future<bool> signUp(String baseUrl, String email, String password, String school, String birthdate, String grade) async {
+  Future<bool> signUp(String baseUrl, String email, String password,
+      String school, String birthdate, String grade) async {
     final response = await http.post(
       Uri.parse("$baseUrl/register"),
       headers: <String, String>{
@@ -49,9 +50,5 @@ class AuthenticationDatatasource {
       logError("Got error code ${response.statusCode}");
       return Future.error('Error code ${response.statusCode}');
     }
-  }
-
-  Future<bool> logOut() async {
-    return Future.value(true);
   }
 }

@@ -141,22 +141,20 @@ class UserDataSource {
             "corrects": session.corrects,
             "incorrects": session.incorrects,
           };
-          final response = http.post(
+          final response = await http.post(
             Uri.parse("https://retoolapi.dev/$apiKey/data"),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },
             body: jsonEncode(sesionData),
           );
-          response.then((value) {
-            if (value.statusCode == 201) {
+            if (response.statusCode == 201) {
               session.isSynced = true;
               hiveBox.put(session.key, session);
               logInfo("after send id: ${session.id} ${hiveBox.get(session.key).isSynced}");
             } else {
-              logError("Got error code ${value.statusCode}");
-            }
-          });
+              logError("Got error code ${response.statusCode}");
+            }          
         }
       } else {
         logInfo("No sessions to send");

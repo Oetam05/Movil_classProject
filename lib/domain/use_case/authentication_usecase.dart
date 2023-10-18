@@ -12,4 +12,5 @@ class AuthenticationUseCase {
 
   Future<bool> logOut() async => await _repository.logOut();
   String getToken() => _repository.getToken;
+  void setUser(String user) => _repository.setUser(user);
 }

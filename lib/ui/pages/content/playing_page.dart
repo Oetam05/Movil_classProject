@@ -1,7 +1,6 @@
 import 'package:f_web_authentication/ui/pages/content/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
 import '../../controller/authentication_controller.dart';
 import '../../controller/calculator_controller.dart';
 
@@ -47,8 +46,7 @@ class _PlayingPageState extends State<PlayingPage> {
   final buttonStyle = ElevatedButton.styleFrom(
     foregroundColor: Colors.white, backgroundColor: Colors.blue,
     shape: RoundedRectangleBorder(
-      borderRadius:
-          BorderRadius.circular(60.0), // Radio de borde (20.0 para redondear)
+      borderRadius: BorderRadius.circular(60.0),
     ),
     textStyle: const TextStyle(fontSize: 24.0), // Tamaño del texto
   );
@@ -58,12 +56,12 @@ class _PlayingPageState extends State<PlayingPage> {
     DateTime momentoGeneracion = DateTime.now();
     return Scaffold(
       appBar: AppBar(title: const Text("Welcome")),
-      body: Column(
-        key: const Key('bodyColumn'),
+      body: Column(        
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Padding(
             key: const Key('difficultyPadding'),
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(10.0),
             child: Row(children: [
               const Text(
                 'Dificultad: \t\t\t',
@@ -77,7 +75,7 @@ class _PlayingPageState extends State<PlayingPage> {
           ),
           Padding(
             key: const Key('questionPadding'),
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(10.0),
             child: Text(
               question.substring(0, question.length - 1),
               key: const Key('questionText'),
@@ -86,12 +84,25 @@ class _PlayingPageState extends State<PlayingPage> {
           ),
           Padding(
             key: const Key('inputPadding'),
-            padding: const EdgeInsets.all(16.0),
-            child: Obx(() => Text(
-                  calculatorController.userInput.value,
-                  key: const Key('inputText'),
-                  style: const TextStyle(fontSize: 24.0),
-                )),
+            padding: const EdgeInsets.all(10.0),
+            child: Obx(() {
+              final userInput = calculatorController.userInput.value;
+              return Container(
+                width: 100, // Establece el ancho deseado
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                  borderRadius: BorderRadius.circular(
+                      10), // Hace que los bordes sean redondeados
+                ),
+                child: Center(
+                  child: Text(
+                    userInput,
+                    key: const Key('inputText'),
+                    style: const TextStyle(fontSize: 24.0),
+                  ),
+                ),
+              );
+            }),
           ),
           Expanded(
             key: const Key('gridView'),
